@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login</title>
+	<script>
+		var firstNInput;
+		var lastNInput;
+		var schoolInput;
+		var storage;
+		window.onLoad = function(){
+			firstNInput = document.getElementById('firstName');
+			lastNInput = document.getElementById('lastInitial');
+			schoolInput = document.getElementById('school');
+			storage = window.sessionStorage;
+			if (storage.getItem('firstName') !== null){
+				var c = confirm(storage.getItem('firstname') + ' ' +storage.getItem('lastname') + ' is already logged in. Are you sure you would like to log in?');
+			}
+		};
+		var firstName;
+		var lastName;
+		var school;
+		var login = function(){
+			firstName = firstNInput.value;
+			lastName = lastNInput.value;
+			school = schoolInput.value;
+			socket.emit('loginInfo',[firstName,lastName,school]);
+		};
+		socket.on('loginConfirmation',function(data){
+			if (data.isValid){
+				storage.setItem('username',firstName);
+				storage.setItem('lastname',lastName);
+				storage.setItem('school',school);
+			}
+		});
+	</script>
+</head>
+<body>
+	<input type = 'text' id = 'firstName' placeholder='First Name'/>
+	<input type = 'text' id = 'lastInitial' placeholder = 'Last Initial'/>
+	<input type = 'text' id = 'school' placeholder = 'school'/>
+	<input type = 'submit' id = 'submit' onclick='login()'/>
+</body>
+</html>
